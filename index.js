@@ -34,7 +34,7 @@ async function run (){
 run().catch(console.dir);
 
 app.get('/', async(req, res) => {
-  res.send('hello world')
+  res.send('Doctors portal running')
 })
 
 app.listen(port, ()=>console.log(`Doctors portal running on ${port}`))
