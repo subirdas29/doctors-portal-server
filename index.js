@@ -17,11 +17,34 @@ async function run (){
 
     try{
         const appointmentOptionsCollection = client.db('doctorsPortal').collection('appointmentOption')
+        const bookingsCollection = client.db('doctorsPortal').collection('bookings')
 
         app.get('/appointmentOptions',async(req,res)=>
         {
+            const date = req.query.date;
             const query ={}
             const options = await appointmentOptionsCollection.find(query).toArray()
+            const bookedQuery = {appointmentDate:date}
+            const alreadyBooked = await bookingsCollection.find(bookedQuery).toArray()
+
+            options.forEach(option =>
+                {
+                    const optionsBooked = alreadyBooked.filter(book=>book.treatment === option.name)
+                    // console.log(optionsBooked)
+                    const bookSlots = optionsBooked.map(book =>book.slot)
+                    console.log(option.name,bookSlots)
+                }
+            
+            )
+
+
+            res.send(options)
+        })
+        app.post('/bookings',async(req,res)=>
+        {
+            const booking = req.body
+            const options = await bookingsCollection.insertOne(booking)
+            console.log(options)
             res.send(options)
         })
 
