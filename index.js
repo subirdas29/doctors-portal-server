@@ -32,7 +32,9 @@ async function run (){
                     const optionsBooked = alreadyBooked.filter(book=>book.treatment === option.name)
                     // console.log(optionsBooked)
                     const bookSlots = optionsBooked.map(book =>book.slot)
-                    console.log(option.name,bookSlots)
+                    const remaining = option.slots.filter(slot => !bookSlots.includes(slot))
+                    option.slots = remaining;
+                    console.log(option.name,remaining.length)
                 }
             
             )
