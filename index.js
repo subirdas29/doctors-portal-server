@@ -114,11 +114,16 @@ async function run (){
             const user = await usersCollection.findOne(query)
             if(user)
             {
-                const token = jwt.sign({email},process.env.ACCESS_TOKEN, { expiresIn:'1h'} );
+                const token = jwt.sign({email},process.env.ACCESS_TOKEN, { expiresIn:'1D'} );
                 return res.send({accessToken:token})
             }
             res.status(403).send({accessToken:''})
 
+        })
+        app.get('/appointmentSpeciality', async (req, res) => {
+            const query = {}
+            const result = await appointmentOptionsCollection.find(query).project({ name: 1 }).toArray();
+            res.send(result);
         })
 
         app.get('/users',async(req,res)=>
