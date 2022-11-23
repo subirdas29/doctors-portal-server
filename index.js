@@ -38,6 +38,7 @@ async function run (){
         const appointmentOptionsCollection = client.db('doctorsPortal').collection('appointmentOption')
         const bookingsCollection = client.db('doctorsPortal').collection('bookings')
         const usersCollection = client.db('doctorsPortal').collection('users')
+        const doctorsCollection = client.db('doctorsPortal').collection('doctors')
 
         app.get('/appointmentOptions',async(req,res)=>
         {
@@ -92,19 +93,7 @@ async function run (){
             res.send(result)
         })
 
-        app.post('/users',async(req,res)=>
-        {
-            const user = req.body
-            const result = await usersCollection.insertOne(user)
-            res.send(result)
-        })
-        app.get('/users/admin/:email',async(req,res)=>
-        {
-            const email = req.params.email
-            const query = {email}
-            const user = await usersCollection.findOne(query)
-            res.send({ isAdmin :user?.role ==='admin' })
-        })
+        
 
         app.get('/jwt',async(req,res)=>{
             const email = req.query.email
@@ -132,6 +121,21 @@ async function run (){
             const result = await usersCollection.find(query).toArray()
             res.send(result)
         })
+
+        app.post('/users',async(req,res)=>
+        {
+            const user = req.body
+            const result = await usersCollection.insertOne(user)
+            res.send(result)
+        })
+        app.get('/users/admin/:email',async(req,res)=>
+        {
+            const email = req.params.email
+            const query = {email}
+            const user = await usersCollection.findOne(query)
+            res.send({ isAdmin :user?.role ==='admin' })
+        })
+
         app.put('/users/admin/:id',verifyJwt ,async(req,res)=>
         {
             const decodedEmail = req.decoded.email;
@@ -151,6 +155,20 @@ async function run (){
            };
            const result = await usersCollection.updateOne(filter, updateDoc, options)
            res.send(result)
+        })
+
+        app.post('/doctors',async(req,res)=>
+        {
+            const doctor = req.body
+            const result = await doctorsCollection.insertOne(doctor)
+            res.send(result)
+        })
+
+        app.get('/doctors',async(req,res)=>
+        {
+            const query = {}
+            const result = await doctorsCollection.find(query).toArray()
+            res.send(result)
         })
 
     }
